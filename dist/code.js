@@ -92,6 +92,10 @@
       "Mim.Farahmand": {
         name: "Mostafa Farahmand",
         avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Mostafa.png"
+      },
+      "Pooya": {
+        name: "Pooya Kamel",
+        avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Pooya.png"
       }
     };
     const normalizedUsername = username.trim();

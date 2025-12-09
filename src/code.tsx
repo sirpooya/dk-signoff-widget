@@ -37,8 +37,14 @@ function getUserInfo(username: string): { name: string; avatarUrl: string } | nu
     'Mim.Farahmand': {
       name: 'Mostafa Farahmand',
       avatarUrl: 'https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Mostafa.png'
+    },
+    'Pooya': {
+      name: 'Pooya Kamel',
+      avatarUrl: 'https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Pooya.png'
     }
   }
+  
+  // Case-insensitive lookup
   
   // Case-insensitive lookup
   const normalizedUsername = username.trim()
