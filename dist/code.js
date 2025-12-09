@@ -71,6 +71,36 @@
   var { widget } = figma;
   var { AutoLayout, Text, SVG, Image, Rectangle, useSyncedState, usePropertyMenu, useEffect, waitForTask } = widget;
   var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklist.json";
+  function getUserInfo(username) {
+    const userMap = {
+      "Elham Tofighi": {
+        name: "Elham Tofighi",
+        avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Elham.png"
+      },
+      "Ho Zi": {
+        name: "Hossein Ziaei",
+        avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Hossein.png"
+      },
+      "Mahdi": {
+        name: "Mahdi Deymi",
+        avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Mehdi.png"
+      },
+      "ashkan ashoori": {
+        name: "Ashkan Ashoori",
+        avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Ashkan.png"
+      },
+      "Mim.Farahmand": {
+        name: "Mostafa Farahmand",
+        avatarUrl: "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/avatars/Mostafa.png"
+      }
+    };
+    const normalizedUsername = username.trim();
+    const matchedKey = Object.keys(userMap).find((key) => key.toLowerCase() === normalizedUsername.toLowerCase());
+    if (matchedKey) {
+      return userMap[matchedKey];
+    }
+    return null;
+  }
   function isRTL(text) {
     const rtlRegex = /[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
     return rtlRegex.test(text);
@@ -587,8 +617,14 @@
     useEffect(() => {
       if (!currentUserName) {
         if (figma.currentUser) {
-          setCurrentUserName(figma.currentUser.name);
-          setCurrentUserPhotoUrl(figma.currentUser.photoUrl);
+          const userInfo = getUserInfo(figma.currentUser.name);
+          if (userInfo) {
+            setCurrentUserName(userInfo.name);
+            setCurrentUserPhotoUrl(userInfo.avatarUrl);
+          } else {
+            setCurrentUserName(figma.currentUser.name);
+            setCurrentUserPhotoUrl(figma.currentUser.photoUrl);
+          }
         } else {
           figma.notify("Please login to Figma", { timeout: 3e3 });
         }
@@ -597,24 +633,42 @@
     useEffect(() => {
       if (pmApproved && !pmAssignee) {
         if (figma.currentUser) {
-          setPmAssignee(figma.currentUser.name);
-          setPmPhotoUrl(figma.currentUser.photoUrl);
+          const userInfo = getUserInfo(figma.currentUser.name);
+          if (userInfo) {
+            setPmAssignee(userInfo.name);
+            setPmPhotoUrl(userInfo.avatarUrl);
+          } else {
+            setPmAssignee(figma.currentUser.name);
+            setPmPhotoUrl(figma.currentUser.photoUrl);
+          }
         }
       }
     });
     useEffect(() => {
       if (designLeadApproved && !designLeadAssignee) {
         if (figma.currentUser) {
-          setDesignLeadAssignee(figma.currentUser.name);
-          setDesignLeadPhotoUrl(figma.currentUser.photoUrl);
+          const userInfo = getUserInfo(figma.currentUser.name);
+          if (userInfo) {
+            setDesignLeadAssignee(userInfo.name);
+            setDesignLeadPhotoUrl(userInfo.avatarUrl);
+          } else {
+            setDesignLeadAssignee(figma.currentUser.name);
+            setDesignLeadPhotoUrl(figma.currentUser.photoUrl);
+          }
         }
       }
     });
     useEffect(() => {
       if (dsmApproved && !dsmAssignee) {
         if (figma.currentUser) {
-          setDsmAssignee(figma.currentUser.name);
-          setDsmPhotoUrl(figma.currentUser.photoUrl);
+          const userInfo = getUserInfo(figma.currentUser.name);
+          if (userInfo) {
+            setDsmAssignee(userInfo.name);
+            setDsmPhotoUrl(userInfo.avatarUrl);
+          } else {
+            setDsmAssignee(figma.currentUser.name);
+            setDsmPhotoUrl(figma.currentUser.photoUrl);
+          }
         }
       }
     });
