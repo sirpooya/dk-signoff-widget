@@ -70,7 +70,7 @@
   // src/code.tsx
   var { widget } = figma;
   var { AutoLayout, Text, SVG, Image, Rectangle, useSyncedState, usePropertyMenu, useEffect, waitForTask } = widget;
-  var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklist.json";
+  var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklis-fa.json";
   function isRTL(text) {
     const rtlRegex = /[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
     return rtlRegex.test(text);
@@ -529,17 +529,26 @@
             return acc;
           }, {});
           setChecklistItems(newItems);
+          figma.notify("Checklist is up to date", { timeout: 2e3 });
           handled = true;
         } else {
           throw new Error("Invalid checklist structure");
         }
       }).catch((error) => {
+        var _a, _b;
         if (handled) {
           return;
         }
         handled = true;
         clearTimeout(fallbackTimeoutId);
         console.error("[CHECKLIST] \u274C Error:", error == null ? void 0 : error.name, "-", error == null ? void 0 : error.message);
+        if ((error == null ? void 0 : error.name) === "TypeError" && ((_a = error == null ? void 0 : error.message) == null ? void 0 : _a.includes("Failed to fetch"))) {
+          figma.notify("Using fallback checklist (Network blocked).", { timeout: 3e3 });
+        } else if ((_b = error == null ? void 0 : error.message) == null ? void 0 : _b.includes("timeout")) {
+          figma.notify("Using fallback checklist (Request timeout).", { timeout: 3e3 });
+        } else {
+          figma.notify("Using fallback checklist (Fetch failed).", { timeout: 3e3 });
+        }
         console.log("[CHECKLIST] Using fallback checklist");
         const fallbackData = checklist_exports;
         const data = fallbackData.default || fallbackData;

@@ -4,7 +4,7 @@ const { AutoLayout, Text, SVG, Image, Rectangle, useSyncedState, usePropertyMenu
 import * as bundledChecklistData from './checklist.json'
 
 // External GitHub URL for checklist.json (same file used as bundled fallback)
-const EXTERNAL_CHECKLIST_URL = 'https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklis-fa.json'
+const EXTERNAL_CHECKLIST_URL = 'https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklist-fa.json'
 
 // Type definition for checklist structure
 type ChecklistData = {
@@ -662,7 +662,7 @@ function CheckboxWidget() {
             return acc
           }, {} as { [key: string]: boolean })
           setChecklistItems(newItems)
-          // figma.notify('Checklist is up to date', { timeout: 2000 })
+          figma.notify('Checklist is up to date', { timeout: 2000 })
           handled = true // Only set handled after successful completion
         } else {
           throw new Error('Invalid checklist structure')
@@ -677,13 +677,13 @@ function CheckboxWidget() {
         console.error('[CHECKLIST] ❌ Error:', error?.name, '-', error?.message)
         
         // Check for specific error types and show appropriate notification
-        // if (error?.name === 'TypeError' && error?.message?.includes('Failed to fetch')) {
-        //   figma.notify('Using fallback checklist (Network blocked).', { timeout: 3000 })
-        // } else if (error?.message?.includes('timeout')) {
-        //   figma.notify('Using fallback checklist (Request timeout).', { timeout: 3000 })
-        // } else {
-        //   figma.notify('Using fallback checklist (Fetch failed).', { timeout: 3000 })
-        // }
+        if (error?.name === 'TypeError' && error?.message?.includes('Failed to fetch')) {
+          figma.notify('Using fallback checklist (Network blocked).', { timeout: 3000 })
+        } else if (error?.message?.includes('timeout')) {
+          figma.notify('Using fallback checklist (Request timeout).', { timeout: 3000 })
+        } else {
+          figma.notify('Using fallback checklist (Fetch failed).', { timeout: 3000 })
+        }
         
         // Fallback to bundled fallback checklist - ALWAYS set this
         console.log('[CHECKLIST] Using fallback checklist')
