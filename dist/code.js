@@ -68,9 +68,14 @@
   };
 
   // src/code.tsx
+  console.log("=== WIDGET CODE FILE LOADED ===");
+  console.log("figma available:", typeof figma !== "undefined");
+  if (typeof figma !== "undefined") {
+    console.log("figma.widget available:", typeof figma.widget !== "undefined");
+  }
   var { widget } = figma;
   var { AutoLayout, Text, SVG, Image, Rectangle, useSyncedState, usePropertyMenu, useEffect, waitForTask } = widget;
-  var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklist.json";
+  var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/figma-signoff-widget/refs/heads/main/src/checklist.json";
   function isRTL(text) {
     const rtlRegex = /[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
     return rtlRegex.test(text);
@@ -718,9 +723,6 @@
         } else {
           setPmApproved(true);
           setPmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
-          if (figma.currentUser) {
-            figma.notify(`PM Approved by user ID: ${figma.currentUser.id}`, { timeout: 3e3 });
-          }
         }
       },
       timestamp: pmTimestamp,
@@ -739,9 +741,6 @@
         } else {
           setDesignLeadApproved(true);
           setDesignLeadTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
-          if (figma.currentUser) {
-            figma.notify(`Design Lead Approved by user ID: ${figma.currentUser.id}`, { timeout: 3e3 });
-          }
         }
       },
       timestamp: designLeadTimestamp,
@@ -760,9 +759,6 @@
         } else {
           setDsmApproved(true);
           setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
-          if (figma.currentUser) {
-            figma.notify(`DSM Approved by user ID: ${figma.currentUser.id}`, { timeout: 3e3 });
-          }
         }
       },
       timestamp: dsmTimestamp,
@@ -830,7 +826,7 @@
       padding: 0,
       width: "fill-parent",
       onClick: () => {
-        figma.openExternal("https://github.com/sirpooya/dk-signoff-widget");
+        figma.openExternal("https://github.com/sirpooya/figma-signoff-widget");
       },
       hoverStyle: { opacity: 0.8 }
     }, /* @__PURE__ */ figma.widget.h(SVG, {
@@ -844,7 +840,7 @@
       fontWeight: "light",
       letterSpacing: 0.5,
       width: "fill-parent"
-    }, "DKSignOff Widget")));
+    }, "DesignSignOff Widget")));
   }
   widget.register(CheckboxWidget);
 })();
