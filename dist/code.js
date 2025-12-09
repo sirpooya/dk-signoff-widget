@@ -718,6 +718,9 @@
         } else {
           setPmApproved(true);
           setPmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
+          if (figma.currentUser) {
+            figma.notify(`PM Approved by user ID: ${figma.currentUser.id}`, { timeout: 3e3 });
+          }
         }
       },
       timestamp: pmTimestamp,
@@ -736,6 +739,9 @@
         } else {
           setDesignLeadApproved(true);
           setDesignLeadTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
+          if (figma.currentUser) {
+            figma.notify(`Design Lead Approved by user ID: ${figma.currentUser.id}`, { timeout: 3e3 });
+          }
         }
       },
       timestamp: designLeadTimestamp,
@@ -754,6 +760,9 @@
         } else {
           setDsmApproved(true);
           setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
+          if (figma.currentUser) {
+            figma.notify(`DSM Approved by user ID: ${figma.currentUser.id}`, { timeout: 3e3 });
+          }
         }
       },
       timestamp: dsmTimestamp,

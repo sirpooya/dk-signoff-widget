@@ -55,43 +55,6 @@ A Figma widget for managing design sign-off processes with approval tracking, da
    npm run build
    ```
 
-## Development
-
-### Build Commands
-
-- **Build once**: `npm run build`
-- **Watch mode** (auto-rebuild on changes): `npm run dev`
-- **Type check**: `npm test`
-
-### Project Structure
-
-```
-figma-signoff-widget/
-├── src/
-│   ├── code.tsx          # Main widget source code
-│   └── tsconfig.json     # TypeScript configuration
-├── dist/
-│   └── code.js           # Compiled JavaScript (auto-generated)
-├── manifest.json         # Widget manifest/configuration
-├── package.json          # NPM dependencies and scripts
-└── README.md            # This file
-```
-
-### Loading the Widget in Figma
-
-1. Open Figma Desktop App
-2. Go to **Plugins** → **Development** → **Import plugin from manifest...**
-3. Select the `manifest.json` file from this project
-4. The widget will appear in your widgets panel
-5. Insert the widget into your design file
-
-### Development Workflow
-
-1. Make changes to `src/code.tsx`
-2. Run `npm run build` (or use watch mode with `npm run dev`)
-3. In Figma, the widget will automatically reload when you make changes
-4. If the widget doesn't reload, remove and re-add it to the canvas
-
 ## Usage
 
 ### Setting Status

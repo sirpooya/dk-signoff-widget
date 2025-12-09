@@ -894,6 +894,10 @@ function CheckboxWidget() {
             } else {
               setPmApproved(true)
               setPmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ', ', padDay: false }))
+              // Notify with user ID when approved
+              if (figma.currentUser) {
+                figma.notify(`PM Approved by user ID: ${figma.currentUser.id}`, { timeout: 3000 })
+              }
             }
           }}
           timestamp={pmTimestamp}
@@ -914,6 +918,10 @@ function CheckboxWidget() {
             } else {
               setDesignLeadApproved(true)
               setDesignLeadTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ', ', padDay: false }))
+              // Notify with user ID when approved
+              if (figma.currentUser) {
+                figma.notify(`Design Lead Approved by user ID: ${figma.currentUser.id}`, { timeout: 3000 })
+              }
             }
           }}
           timestamp={designLeadTimestamp}
@@ -934,6 +942,10 @@ function CheckboxWidget() {
             } else {
               setDsmApproved(true)
               setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ', ', padDay: false }))
+              // Notify with user ID when approved
+              if (figma.currentUser) {
+                figma.notify(`DSM Approved by user ID: ${figma.currentUser.id}`, { timeout: 3000 })
+              }
             }
           }}
           timestamp={dsmTimestamp}
