@@ -1,0 +1,26 @@
+{
+  "name": "DesignSignOff",
+  "id": "1579908029366904668",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "documentAccess": "dynamic-page",
+  "editorType": [
+    "figma",
+    "figjam"
+  ],
+  "containsWidget": true,
+  "widgetApi": "1.0.0",
+  "permissions": [
+    "currentuser"
+  ],
+  "networkAccess": {
+    "allowedDomains": [
+      "https://s3-alpha.figma.com",
+      "https://s3.figma.com",
+      "https://raw.githubusercontent.com",
+      "https://api.github.com"
+    ]
+  }
+}
