@@ -70,7 +70,7 @@
   // src/code.tsx
   var { widget } = figma;
   var { AutoLayout, Text, SVG, Image, Rectangle, useSyncedState, usePropertyMenu, useEffect, waitForTask } = widget;
-  var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/figma-signoff-widget/refs/heads/main/src/checklist.json";
+  var EXTERNAL_CHECKLIST_URL = "https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklist.json";
   function isRTL(text) {
     const rtlRegex = /[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
     return rtlRegex.test(text);
@@ -830,7 +830,7 @@
       padding: 0,
       width: "fill-parent",
       onClick: () => {
-        figma.openExternal("https://github.com/sirpooya/figma-signoff-widget");
+        figma.openExternal("https://github.com/sirpooya/dk-signoff-widget");
       },
       hoverStyle: { opacity: 0.8 }
     }, /* @__PURE__ */ figma.widget.h(SVG, {

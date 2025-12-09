@@ -4,8 +4,8 @@
   "description": "Figma widget for design sign-off process",
   "scripts": {
     "test": "tsc -p src --noEmit",
-    "build": "esbuild src/code.tsx --bundle --outfile=dist/code.js",
-    "watch": "esbuild src/code.tsx --bundle --outfile=dist/code.js --watch",
+    "build": "esbuild src/code.tsx --bundle --format=iife --target=es6 --outfile=dist/code.js",
+    "watch": "esbuild src/code.tsx --bundle --format=iife --target=es6 --outfile=dist/code.js --watch",
     "dev": "concurrently -n tsc,build 'npm run test -- --preserveWatchOutput --watch' 'npm run build -- --watch'"
   },
   "author": "",

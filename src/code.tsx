@@ -4,7 +4,7 @@ const { AutoLayout, Text, SVG, Image, Rectangle, useSyncedState, usePropertyMenu
 import * as bundledChecklistData from './checklist.json'
 
 // External GitHub URL for checklist.json (same file used as bundled fallback)
-const EXTERNAL_CHECKLIST_URL = 'https://raw.githubusercontent.com/sirpooya/figma-signoff-widget/refs/heads/main/src/checklist.json'
+const EXTERNAL_CHECKLIST_URL = 'https://raw.githubusercontent.com/sirpooya/dk-signoff-widget/refs/heads/main/src/checklist.json'
 
 // Type definition for checklist structure
 type ChecklistData = {
@@ -1045,7 +1045,7 @@ function CheckboxWidget() {
         padding={0}
         width="fill-parent"
         onClick={() => {
-          figma.openExternal('https://github.com/sirpooya/figma-signoff-widget')
+          figma.openExternal('https://github.com/sirpooya/dk-signoff-widget')
         }}
         hoverStyle={{ opacity: 0.8 }}
       >
