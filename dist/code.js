@@ -835,7 +835,7 @@
       fontWeight: "light",
       letterSpacing: 0.5,
       width: "fill-parent"
-    }, "DesignSignOff Widget")));
+    }, "DKSignOff Widget")));
   }
   widget.register(CheckboxWidget);
 })();

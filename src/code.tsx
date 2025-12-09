@@ -1050,7 +1050,7 @@ function CheckboxWidget() {
           letterSpacing={0.5}
           width="fill-parent"
         >
-          DesignSignOff Widget
+          DKSignOff Widget
         </Text>
       </AutoLayout>
     </AutoLayout>

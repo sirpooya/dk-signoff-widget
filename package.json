@@ -1,10 +1,11 @@
 {
-  "name": "Design-SignOff",
+  "name": "DK-SignOff",
   "version": "1.0.0",
   "description": "Figma widget for design sign-off process",
   "scripts": {
     "test": "tsc -p src --noEmit",
     "build": "esbuild src/code.tsx --bundle --outfile=dist/code.js",
+    "watch": "esbuild src/code.tsx --bundle --outfile=dist/code.js --watch",
     "dev": "concurrently -n tsc,build 'npm run test -- --preserveWatchOutput --watch' 'npm run build -- --watch'"
   },
   "author": "",

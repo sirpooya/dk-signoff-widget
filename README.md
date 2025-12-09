@@ -1,4 +1,4 @@
-# Design Sign-Off Widget
+# DK Sign-Off Widget
 
 A Figma widget for managing design sign-off processes with approval tracking, date management, and checklist functionality.
 
