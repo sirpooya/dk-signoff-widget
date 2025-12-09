@@ -932,8 +932,13 @@ function CheckboxWidget() {
               setDsmPhotoUrl(null)
               setDsmTimestamp(null)
             } else {
-              setDsmApproved(true)
-              setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ', ', padDay: false }))
+              // Check if user is authorized DSM before approving
+              if (figma.currentUser && figma.currentUser.id === '1037663391016075886') {
+                setDsmApproved(true)
+                setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ', ', padDay: false }))
+              } else {
+                figma.notify('Only DSM can do this.', { timeout: 3000 })
+              }
             }
           }}
           timestamp={dsmTimestamp}

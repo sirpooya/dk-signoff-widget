@@ -761,8 +761,12 @@
           setDsmPhotoUrl(null);
           setDsmTimestamp(null);
         } else {
-          setDsmApproved(true);
-          setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
+          if (figma.currentUser && figma.currentUser.id === "1037663391016075886") {
+            setDsmApproved(true);
+            setDsmTimestamp(formatDateTime(new Date(), { includeYear: false, separator: ", ", padDay: false }));
+          } else {
+            figma.notify("Only DSM can do this.", { timeout: 3e3 });
+          }
         }
       },
       timestamp: dsmTimestamp,
