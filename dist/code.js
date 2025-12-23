@@ -390,6 +390,50 @@
       letterSpacing: 2
     }, config.label.toUpperCase())));
   }
+  function LinkRow({ link, onLinkClick, onEdit, hasBorderBottom }) {
+    return /* @__PURE__ */ figma.widget.h(AutoLayout, {
+      name: "link-row",
+      direction: "horizontal",
+      verticalAlignItems: "center",
+      spacing: 12,
+      padding: 16,
+      width: "fill-parent",
+      stroke: hasBorderBottom ? {
+        type: "solid",
+        color: colors["border-1"]
+      } : void 0,
+      strokeWidth: hasBorderBottom ? 1 : void 0,
+      strokeAlign: "center",
+      onClick: onEdit,
+      hoverStyle: { opacity: 0.8 }
+    }, /* @__PURE__ */ figma.widget.h(AutoLayout, {
+      name: "link-wrapper",
+      direction: "vertical",
+      verticalAlignItems: "start",
+      spacing: 6,
+      width: "fill-parent"
+    }, /* @__PURE__ */ figma.widget.h(Text, {
+      name: "label",
+      fontSize: 14,
+      fill: colors["content-1"],
+      fontWeight: "medium",
+      width: "fill-parent"
+    }, "Links"), link ? /* @__PURE__ */ figma.widget.h(Text, {
+      name: "link",
+      fontSize: 14,
+      fill: colors.link,
+      fontWeight: "normal",
+      width: "fill-parent",
+      truncate: 1,
+      href: link
+    }, link) : /* @__PURE__ */ figma.widget.h(Text, {
+      name: "link-placeholder",
+      fontSize: 14,
+      fill: colors["content-3"],
+      fontWeight: "normal",
+      width: "fill-parent"
+    }, "Click to add link")));
+  }
   function CheckboxItem({ label, checked, onToggle, direction = "rtl" }) {
     const isRTLDirection = direction === "rtl";
     const textAlign = isRTLDirection ? "right" : "left";
@@ -494,6 +538,8 @@
     const [dsmPhotoUrl, setDsmPhotoUrl] = useSyncedState("dsmPhotoUrl", null);
     const [dsmTimestamp, setDsmTimestamp] = useSyncedState("dsmTimestamp", null);
     const [showChecklist, setShowChecklist] = useSyncedState("showChecklist", true);
+    const [showLinkSection, setShowLinkSection] = useSyncedState("showLinkSection", false);
+    const [linkUrl, setLinkUrl] = useSyncedState("linkUrl", "");
     const [currentUserName, setCurrentUserName] = useSyncedState("currentUserName", "");
     const [currentUserPhotoUrl, setCurrentUserPhotoUrl] = useSyncedState("currentUserPhotoUrl", null);
     const [checklistData, setChecklistData] = useSyncedState("checklistData", null);
@@ -634,6 +680,150 @@
         }
       }
     });
+    const formatUrl = (url) => {
+      if (!url)
+        return "";
+      const trimmed = url.trim();
+      if (!trimmed)
+        return "";
+      if (!trimmed.match(/^https?:\/\//i)) {
+        return `https://${trimmed}`;
+      }
+      return trimmed;
+    };
+    const showLinkEditDialog = () => {
+      return new Promise((resolve) => {
+        figma.ui.onmessage = (msg) => {
+          if (msg.type === "save-link") {
+            const formattedUrl = formatUrl(msg.url || "");
+            setLinkUrl(formattedUrl);
+            figma.ui.close();
+            resolve();
+          } else if (msg.type === "cancel-link") {
+            figma.ui.close();
+            resolve();
+          }
+        };
+        figma.showUI(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body {
+              margin: 0;
+              padding: 16px;
+              font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+              background: #FFFFFF;
+            }
+            label {
+              display: block;
+              margin-bottom: 8px;
+              font-size: 12px;
+              color: #1F1F1F;
+              font-weight: 500;
+            }
+            input {
+              width: 100%;
+              padding: 8px;
+              font-size: 14px;
+              border: 1px solid #ECEDEF;
+              border-radius: 4px;
+              box-sizing: border-box;
+              font-family: inherit;
+            }
+            input:focus {
+              outline: none;
+              border-color: #1672DD;
+            }
+            .button-group {
+              margin-top: 12px;
+              display: flex;
+              gap: 8px;
+              justify-content: flex-end;
+            }
+            button {
+              padding: 8px 16px;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+              font-size: 14px;
+              font-family: inherit;
+              font-weight: 500;
+            }
+            #cancel-link {
+              background: #ECEDEF;
+              color: #1F1F1F;
+            }
+            #cancel-link:hover {
+              background: #E0E0E0;
+            }
+            #save-link {
+              background: #1672DD;
+              color: white;
+            }
+            #save-link:hover {
+              background: #0D5BB8;
+            }
+          </style>
+        </head>
+        <body>
+          <label for="link-input">Enter URL:</label>
+          <input 
+            id="link-input" 
+            type="text" 
+            placeholder="https://example.com" 
+            value="${(linkUrl || "").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}" 
+            autocomplete="off"
+          />
+          <div class="button-group">
+            <button id="cancel-link">Cancel</button>
+            <button id="save-link">Save</button>
+          </div>
+          <script>
+            (function() {
+              const input = document.getElementById('link-input');
+              const saveBtn = document.getElementById('save-link');
+              const cancelBtn = document.getElementById('cancel-link');
+              
+              function sendMessage(type, url) {
+                window.parent.postMessage({ pluginMessage: { type: type, url: url } }, '*');
+              }
+              
+              function saveLink() {
+                const url = input.value.trim();
+                sendMessage('save-link', url);
+              }
+              
+              function cancelLink() {
+                sendMessage('cancel-link', null);
+              }
+              
+              saveBtn.addEventListener('click', saveLink);
+              cancelBtn.addEventListener('click', cancelLink);
+              
+              input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  saveLink();
+                } else if (e.key === 'Escape') {
+                  e.preventDefault();
+                  cancelLink();
+                }
+              });
+              
+              // Focus and select on load
+              setTimeout(function() {
+                input.focus();
+                input.select();
+              }, 10);
+            })();
+          <\/script>
+        </body>
+        </html>
+      `, { width: 320, height: 140, themeColors: true });
+      });
+    };
     useEffect(() => {
       if (pmApproved && !pmAssignee) {
         if (figma.currentUser) {
@@ -702,7 +892,15 @@
           tooltip: "Status",
           propertyName: "status"
         }
-      ] : []
+      ] : [],
+      {
+        itemType: "action",
+        tooltip: showLinkSection ? "Hide Link" : "Add Link",
+        propertyName: "addLink",
+        icon: `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path fill="white" d="M6.99121 9.50793C7.28411 9.21507 7.75985 9.21505 8.05273 9.50793C8.34526 9.80076 8.34526 10.2757 8.05273 10.5685L5.86035 12.7609C4.41317 14.252 4.43023 16.6296 5.90039 18.0997C7.37284 19.572 9.75547 19.5869 11.2461 18.1329L13.4316 15.9474C13.7246 15.6548 14.1994 15.6546 14.4922 15.9474C14.7849 16.2402 14.7848 16.715 14.4922 17.0079L12.293 19.2072C10.2145 21.234 6.89277 21.213 4.83984 19.1603C2.78678 17.1072 2.76565 13.7847 4.79297 11.7062L6.99121 9.50793ZM14.1377 8.80188C14.4305 8.50903 14.9053 8.50913 15.1982 8.80188C15.491 9.09478 15.4911 9.56958 15.1982 9.86243L9.8623 15.1984C9.56945 15.4911 9.09463 15.4911 8.80176 15.1984C8.50904 14.9055 8.509 14.4307 8.80176 14.1378L14.1377 8.80188ZM11.7061 4.79309C13.7846 2.76584 17.1071 2.78693 19.1602 4.83997C21.2129 6.89287 21.2338 10.2146 19.207 12.2931L17.0078 14.4923C16.7149 14.7849 16.2401 14.7851 15.9473 14.4923C15.6545 14.1995 15.6546 13.7247 15.9473 13.4318L18.1328 11.2462C19.5867 9.75558 19.5719 7.37294 18.0996 5.90051C16.6272 4.4281 14.2446 4.4134 12.7539 5.86731L10.5684 8.05286C10.2755 8.34542 9.80064 8.34542 9.50781 8.05286C9.21493 7.75996 9.21492 7.28422 9.50781 6.99133L11.7061 4.79309Z"/>
+</svg>`
+      }
     ], ({ propertyName, propertyValue }) => {
       if (propertyName === "signOff") {
         setDesignerSignedOff(true);
@@ -714,6 +912,9 @@
         if (newStatus === "review") {
           setShowChecklist(true);
         }
+      }
+      if (propertyName === "addLink") {
+        setShowLinkSection(!showLinkSection);
       }
     });
     return /* @__PURE__ */ figma.widget.h(AutoLayout, {
@@ -828,6 +1029,31 @@
         }
       },
       timestamp: dsmTimestamp,
+      hasBorderBottom: false
+    })), showLinkSection && /* @__PURE__ */ figma.widget.h(AutoLayout, {
+      name: "link-section",
+      direction: "vertical",
+      verticalAlignItems: "start",
+      horizontalAlignItems: "start",
+      spacing: 0,
+      padding: 0,
+      width: "fill-parent",
+      stroke: {
+        type: "solid",
+        color: colors["border-1"]
+      },
+      strokeWidth: 1,
+      cornerRadius: 12
+    }, /* @__PURE__ */ figma.widget.h(LinkRow, {
+      link: linkUrl,
+      onLinkClick: () => {
+        if (linkUrl) {
+          figma.openExternal(linkUrl);
+        }
+      },
+      onEdit: () => {
+        waitForTask(showLinkEditDialog());
+      },
       hasBorderBottom: false
     })), (() => {
       const shouldShowChecklist = showChecklist && status !== "ready-for-dev" && status !== "live" && status !== "live-app" && status !== "live-web" && status !== "archived" && checklistData !== null && checklistData !== void 0;
