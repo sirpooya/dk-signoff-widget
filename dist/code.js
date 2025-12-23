@@ -225,6 +225,11 @@
   function getCurrentDateTime() {
     return formatDateTime(new Date());
   }
+  function cleanUrlForDisplay(url) {
+    if (!url)
+      return "";
+    return url.replace(/^http:\/\/(www\.)?/i, "");
+  }
   function DateRow({ label, date, onRefresh, hasBorderBottom, photoUrl, userName, showRefreshButton = true, isSignedOff = false, onSignOff }) {
     const isSignoffRow = photoUrl !== void 0 && userName !== void 0;
     return /* @__PURE__ */ figma.widget.h(AutoLayout, {
@@ -426,7 +431,7 @@
       width: "fill-parent",
       truncate: 1,
       href: link
-    }, link) : /* @__PURE__ */ figma.widget.h(Text, {
+    }, cleanUrlForDisplay(link)) : /* @__PURE__ */ figma.widget.h(Text, {
       name: "link-placeholder",
       fontSize: 14,
       fill: colors["content-3"],
@@ -691,6 +696,14 @@
       }
       return trimmed;
     };
+    const getUrlForModal = (url) => {
+      if (!url)
+        return "";
+      if (!url.match(/^https?:\/\//i)) {
+        return `https://${url}`;
+      }
+      return url;
+    };
     const showLinkEditDialog = () => {
       return new Promise((resolve) => {
         figma.ui.onmessage = (msg) => {
@@ -704,6 +717,8 @@
             resolve();
           }
         };
+        const urlForModal = getUrlForModal(linkUrl || "");
+        const escapedUrl = urlForModal.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         figma.showUI(`
         <!DOCTYPE html>
         <html>
@@ -773,7 +788,7 @@
             id="link-input" 
             type="text" 
             placeholder="https://example.com" 
-            value="${(linkUrl || "").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}" 
+            value="${escapedUrl}" 
             autocomplete="off"
           />
           <div class="button-group">

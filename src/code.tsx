@@ -203,6 +203,13 @@ function getCurrentDateTime(): string {
   return formatDateTime(new Date())
 }
 
+// Function to clean URL for display - remove http:// or http://www.
+function cleanUrlForDisplay(url: string): string {
+  if (!url) return ''
+  // Remove http:// or http://www. from the beginning (but keep https://)
+  return url.replace(/^http:\/\/(www\.)?/i, '')
+}
+
 function DateRow({ label, date, onRefresh, hasBorderBottom, photoUrl, userName, showRefreshButton = true, isSignedOff = false, onSignOff }) {
   const isSignoffRow = photoUrl !== undefined && userName !== undefined
   return (
@@ -484,7 +491,7 @@ function LinkRow({ link, onLinkClick, onEdit, hasBorderBottom }) {
             truncate={1}
             href={link}
           >
-            {link}
+            {cleanUrlForDisplay(link)}
           </Text>
         ) : (
           <Text
@@ -865,6 +872,16 @@ function CheckboxWidget() {
     return trimmed
   }
 
+  // Function to get URL for modal input - ensure it has https://
+  const getUrlForModal = (url: string): string => {
+    if (!url) return ''
+    // If it doesn't start with http:// or https://, add https://
+    if (!url.match(/^https?:\/\//i)) {
+      return `https://${url}`
+    }
+    return url
+  }
+
   // Function to show link edit dialog
   const showLinkEditDialog = () => {
     return new Promise<void>((resolve) => {
@@ -880,6 +897,10 @@ function CheckboxWidget() {
           resolve()
         }
       }
+      
+      // Prepare URL for modal input - ensure it has https://
+      const urlForModal = getUrlForModal(linkUrl || '')
+      const escapedUrl = urlForModal.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       
       // Show UI
       figma.showUI(`
@@ -951,7 +972,7 @@ function CheckboxWidget() {
             id="link-input" 
             type="text" 
             placeholder="https://example.com" 
-            value="${(linkUrl || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}" 
+            value="${escapedUrl}" 
             autocomplete="off"
           />
           <div class="button-group">
